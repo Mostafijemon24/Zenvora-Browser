@@ -1,0 +1,118 @@
+{
+  "name": "zenvora-ui",
+  "productName": "Zenvora",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "electron": "npm run build && electron .",
+    "electron:dev": "ZENVORA_DEV_URL=http://localhost:5173 electron .",
+    "dist": "npm run build && electron-builder --publish never",
+    "dist:linux": "npm run build && electron-builder --linux --publish never",
+    "dist:win": "npm run build && electron-builder --win --publish never",
+    "dist:mac": "npm run build && electron-builder --mac --publish never"
+  },
+  "devDependencies": {
+    "@fontsource/hanken-grotesk": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@testing-library/react": "^16.1.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^44.9.1",
+    "electron-builder": "^26.15.3",
+    "jsdom": "^25.0.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "typescript": "~5.6.3",
+    "vite": "^6.0.0",
+    "vitest": "^3.2.0"
+  },
+  "description": "Zenvora \u2014 an AI-first desktop browser",
+  "author": {
+    "name": "Mostafijemon24",
+    "email": "Mostafijemon24@users.noreply.github.com"
+  },
+  "homepage": "https://github.com/Mostafijemon24/Zenvora-Browser",
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "com.zenvora.browser",
+    "productName": "Zenvora",
+    "artifactName": "Zenvora-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**",
+      "electron/**",
+      "package.json"
+    ],
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "category": "public.app-category.productivity",
+      "identity": "-",
+      "hardenedRuntime": false
+    },
+    "dmg": {
+      "title": "Zenvora ${version}"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Zenvora-Setup-${version}-${arch}.${ext}"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Network",
+      "synopsis": "AI-first desktop browser",
+      "maintainer": "Mostafijemon24 <Mostafijemon24@users.noreply.github.com>",
+      "syncDesktopName": true
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Mostafijemon24",
+        "repo": "Zenvora-Browser",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "desktopName": "zenvora.desktop"
+}

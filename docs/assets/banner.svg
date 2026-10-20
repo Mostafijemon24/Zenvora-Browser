@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-label="Zenvora — an AI-first desktop browser for Windows, macOS and Linux">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f2eee7"/>
+      <stop offset="1" stop-color="#e7e1d7"/>
+    </linearGradient>
+    <linearGradient id="win" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbf9f5"/>
+      <stop offset="1" stop-color="#f2eee7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="360" rx="24" fill="url(#bg)"/>
+  <rect x="72" y="104" width="88" height="88" rx="22" fill="#4F6BED"/>
+  <text x="116" y="168" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="56" font-weight="700" fill="#ffffff">Z</text>
+  <text x="184" y="170" font-family="Helvetica, Arial, sans-serif" font-size="68" font-weight="700" fill="#24211d" letter-spacing="-2">Zenvora</text>
+  <text x="74" y="236" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#5c564e">An AI-first desktop browser with workspaces,</text>
+  <text x="74" y="270" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#5c564e">a page assistant and supervised task automation.</text>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#5c564e">
+    <rect x="74" y="298" width="96" height="30" rx="15" fill="#ffffff" stroke="#e0d9ce"/>
+    <text x="122" y="318" text-anchor="middle">Windows</text>
+    <rect x="180" y="298" width="86" height="30" rx="15" fill="#ffffff" stroke="#e0d9ce"/>
+    <text x="223" y="318" text-anchor="middle">macOS</text>
+    <rect x="276" y="298" width="76" height="30" rx="15" fill="#ffffff" stroke="#e0d9ce"/>
+    <text x="314" y="318" text-anchor="middle">Linux</text>
+  </g>
+  <rect x="720" y="56" width="500" height="250" rx="16" fill="url(#win)" stroke="#e0d9ce"/>
+  <circle cx="746" cy="80" r="6" fill="#ff5f57"/>
+  <circle cx="766" cy="80" r="6" fill="#febc2e"/>
+  <circle cx="786" cy="80" r="6" fill="#28c840"/>
+  <rect x="808" y="68" width="120" height="24" rx="8" fill="#ffffff" stroke="#e0d9ce"/>
+  <rect x="938" y="72" width="90" height="16" rx="6" fill="#e0d9ce"/>
+  <rect x="1036" y="72" width="90" height="16" rx="6" fill="#e0d9ce"/>
+  <rect x="736" y="104" width="468" height="28" rx="10" fill="#ebe6de"/>
+  <rect x="744" y="111" width="60" height="14" rx="5" fill="#d9e6dc"/>
+  <rect x="736" y="146" width="300" height="144" rx="10" fill="#ffffff" stroke="#e0d9ce"/>
+  <rect x="756" y="166" width="180" height="14" rx="5" fill="#e0d9ce"/>
+  <rect x="756" y="190" width="240" height="10" rx="4" fill="#ece6dc"/>
+  <rect x="756" y="208" width="210" height="10" rx="4" fill="#ece6dc"/>
+  <rect x="756" y="236" width="80" height="34" rx="9" fill="#e9edfd"/>
+  <rect x="846" y="236" width="80" height="34" rx="9" fill="#e9edfd"/>
+  <rect x="1048" y="146" width="156" height="144" rx="10" fill="#f7f4ee" stroke="#e0d9ce"/>
+  <rect x="1060" y="160" width="70" height="10" rx="4" fill="#c9c1b4"/>
+  <rect x="1060" y="180" width="132" height="34" rx="8" fill="#ffffff" stroke="#e0d9ce"/>
+  <rect x="1088" y="224" width="104" height="26" rx="8" fill="#4F6BED"/>
+  <rect x="1060" y="260" width="132" height="20" rx="7" fill="#ffffff" stroke="#e0d9ce"/>
+</svg>

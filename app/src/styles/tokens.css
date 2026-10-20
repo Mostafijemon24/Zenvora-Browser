@@ -1,0 +1,79 @@
+/* Design tokens, copied from the Zenvora design. Set on any element with
+   data-theme (light | dark) and data-accent (blue | teal | ember | violet). */
+
+[data-theme] {
+  --accent: #4f6bed;
+  --desk: #e7e1d7;
+  --chrome: #f2eee7;
+  --surface: #fbf9f5;
+  --raised: #ffffff;
+  --addr: #ebe6de;
+  --ink: #24211d;
+  --ink2: #5c564e;
+  --ink3: #857e74;
+  --line: #e0d9ce;
+  --hover: rgba(36, 33, 29, 0.06);
+  --stripe: #f1ede6;
+  --ok: oklch(0.56 0.12 155);
+  --warn: oklch(0.62 0.13 70);
+  --danger: oklch(0.56 0.16 28);
+  --shadow: 0 24px 60px -20px rgba(60, 45, 25, 0.35), 0 2px 6px rgba(60, 45, 25, 0.08);
+  --font: 'Hanken Grotesk', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+[data-theme='dark'] {
+  --desk: #141312;
+  --chrome: #1c1a18;
+  --surface: #232120;
+  --raised: #2b2826;
+  --addr: #2b2826;
+  --ink: #efe9e1;
+  --ink2: #b9b1a6;
+  --ink3: #8a8278;
+  --line: #36322e;
+  --hover: rgba(255, 255, 255, 0.06);
+  --stripe: #282523;
+  --shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+[data-accent='teal'] { --accent: #2e9e83; }
+[data-accent='ember'] { --accent: #d9653b; }
+[data-accent='violet'] { --accent: #8b5cf6; }
+
+[data-theme] {
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--accent, #4f6bed);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
