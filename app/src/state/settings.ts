@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import type { SearchEngine } from '../lib/url';
+import type { AiConfig } from '../services/assistant-http';
 import { native } from '../lib/native';
 
 export type Theme = 'light' | 'dark' | 'system';
@@ -37,6 +38,8 @@ export interface Settings {
   startup: 'restore' | 'newtab';
   suspend: '15' | '30' | 'never';
   tg: Toggles;
+  /** Assistant server connection (keys stay on the server). */
+  ai: AiConfig;
 }
 
 const STORAGE_KEY = 'zenvora.settings.v1';
@@ -58,6 +61,7 @@ export const DEFAULT_SETTINGS: Settings = {
   startup: 'restore',
   suspend: '30',
   tg: { suggest: true, askShare: true, incog: true, suspAudio: true, prefetch: false, local: false },
+  ai: { serverUrl: '', token: '', provider: 'anthropic', model: '' },
 };
 
 const pick = <T extends string>(v: string | null, opts: readonly T[]): T | undefined =>
@@ -92,6 +96,7 @@ function load(): Settings {
     platform: detectPlatform(),
     ...stored,
     tg: { ...DEFAULT_SETTINGS.tg, ...(stored.tg || {}) },
+    ai: { ...DEFAULT_SETTINGS.ai, ...(stored.ai || {}) },
     ...fromQuery(),
     // The desktop app always uses the real OS's window controls.
     ...(native ? { platform: native.platform } : {}),

@@ -6,6 +6,8 @@ import type { Accent, Toggles } from '../../state/settings';
 import { Segmented, opts } from '../ui/Segmented';
 import type { SegOption } from '../ui/Segmented';
 import { Toggle } from '../ui/Toggle';
+import { PROVIDER_LABELS, fetchProviders } from '../../services/assistant-http';
+import type { AiConfig, AiProvider, ProviderInfo } from '../../services/assistant-http';
 
 type Section = 'appearance' | 'search' | 'ai' | 'sessions';
 
@@ -34,6 +36,29 @@ export function SettingsPage() {
   const set = b.updateSettings;
   const [section, setSection] = useState<Section>('appearance');
   const [localStatus, setLocalStatus] = useState('Not detected at localhost:11434');
+  const [providers, setProviders] = useState<ProviderInfo[] | null>(null);
+  const [conn, setConn] = useState<{ text: string; tone: string; busy: boolean }>({
+    text: s.ai.serverUrl.trim() ? 'Not checked yet' : 'No server set',
+    tone: 'c-ink3',
+    busy: false,
+  });
+  const setAi = (p: Partial<AiConfig>) => set({ ai: { ...s.ai, ...p } });
+  const testConnection = async () => {
+    setConn({ text: 'Checking…', tone: 'c-ink3', busy: true });
+    try {
+      const info = await fetchProviders(s.ai);
+      setProviders(info.providers);
+      const ready = info.providers.filter((p) => p.configured).map((p) => PROVIDER_LABELS[p.id]);
+      setConn({
+        text: ready.length ? `Connected · ${ready.join(' and ')} ready` : 'Connected, but the server has no API keys set',
+        tone: ready.length ? 'c-ok' : 'c-warn',
+        busy: false,
+      });
+    } catch (e) {
+      setProviders(null);
+      setConn({ text: (e as Error).message, tone: 'c-danger', busy: false });
+    }
+  };
   const [probing, setProbing] = useState(false);
 
   const toggleRow = (k: keyof Toggles, label: string, sub: string) => (
@@ -84,13 +109,67 @@ export function SettingsPage() {
     ai: [
       'AI & automation',
       [
-        <Row key="cloud" label="Claude (Anthropic)" sub="Cloud model for Assistant and Tasks.">
+        <Row key="server" label="Assistant server" sub="Address of your Zenvora Assistant server. Your Claude and OpenRouter API keys stay on that server, never in this app.">
+          <input
+            className="setting-input"
+            type="url"
+            inputMode="url"
+            spellCheck={false}
+            placeholder="https://assistant.example.com"
+            aria-label="Assistant server address"
+            value={s.ai.serverUrl}
+            onChange={(e) => setAi({ serverUrl: e.target.value })}
+          />
+        </Row>,
+        <Row key="token" label="Access token" sub="The ZENVORA_ACCESS_TOKEN configured on the server. Leave empty if the server doesn't use one. Saved on this device.">
+          <input
+            className="setting-input"
+            type="password"
+            autoComplete="off"
+            spellCheck={false}
+            placeholder="Access token"
+            aria-label="Access token"
+            value={s.ai.token}
+            onChange={(e) => setAi({ token: e.target.value })}
+          />
+        </Row>,
+        <Row key="test" label="Connection" sub="Checks the server and which providers have API keys.">
           <div className="setting-action">
-            <span>{b.services.aiProviders.cloudStatus()}</span>
-            <button type="button" className="btn sm" disabled title="Keys are stored in the OS keychain by the desktop build">
-              Add key
+            <span aria-live="polite" className={conn.tone}>{conn.text}</span>
+            <button type="button" className="btn sm" disabled={!s.ai.serverUrl.trim() || conn.busy} onClick={testConnection}>
+              Test connection
             </button>
           </div>
+        </Row>,
+        <Row key="provider" label="Provider" sub="Which AI answers in the Assistant panel.">
+          <Segmented
+            variant="choice"
+            label="Provider"
+            options={(['anthropic', 'openrouter'] as AiProvider[]).map((id) => ({
+              value: id,
+              label: PROVIDER_LABELS[id] + (providers && !providers.find((p) => p.id === id)?.configured ? ' (no key)' : ''),
+            }))}
+            value={s.ai.provider}
+            onChange={(provider) => setAi({ provider, model: '' })}
+          />
+        </Row>,
+        <Row
+          key="model"
+          label="Model"
+          sub={
+            s.ai.provider === 'anthropic'
+              ? 'Leave empty for the server default. Examples: claude-opus-5-5, claude-sonnet-5-5, claude-haiku-5-5.'
+              : 'Leave empty for the server default. Use any model ID from openrouter.ai/models, e.g. openrouter/auto.'
+          }
+        >
+          <input
+            className="setting-input"
+            spellCheck={false}
+            placeholder={providers?.find((p) => p.id === s.ai.provider)?.defaultModel || 'Server default'}
+            aria-label="Model"
+            value={s.ai.model}
+            onChange={(e) => setAi({ model: e.target.value })}
+          />
         </Row>,
         <Row key="local" label="Local model" sub="Runs on this computer via an Ollama-compatible server.">
           <div className="setting-action">

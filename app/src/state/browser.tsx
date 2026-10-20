@@ -3,7 +3,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import type { ReactNode, RefObject } from 'react';
 import { SETTINGS_URL, hostOf, normalize, typeOf } from '../lib/url';
-import { isNative, native, withWebview } from '../lib/native';
+import { isNative, native, readPageText, withWebview } from '../lib/native';
+import { createHttpAssistant, notConnectedAssistant } from '../services/assistant-http';
 import type { PageType } from '../lib/url';
 import { services } from '../services';
 import type { SharedPage } from '../services';
@@ -197,15 +198,31 @@ function useBrowserState() {
 
   // ---- features ----
   const vpn = useVpn(services.vpn);
-  const assistant = useAssistant(services.assistant);
+  const assistant = useAssistant();
   const downloads = useDownloads(services.downloads);
   const automation = useAutomation(services.automation, (r) =>
     services.downloads.addFile({ name: r.fileName, ext: 'CSV', sizeMb: 0.004, note: `${r.sizeLabel} · Created by task just now` }),
   );
 
+  // A configured server gives real answers. Otherwise the web preview uses
+  // sample replies and the desktop app says it isn't connected.
+  const aiConnected = !!settings.ai.serverUrl.trim();
+  const assistantService = useMemo(
+    () => (aiConnected ? createHttpAssistant(settings.ai) : isNative ? notConnectedAssistant : services.assistant),
+    [aiConnected, settings.ai],
+  );
   const ask = useCallback(
-    (text: string) => assistant.send(text, sharedTabs.map<SharedPage>((t) => ({ title: t.title, url: t.url }))),
-    [assistant, sharedTabs],
+    (text: string) =>
+      assistant.send(text, assistantService, () =>
+        Promise.all(
+          sharedTabs.map<Promise<SharedPage>>(async (t) => ({
+            title: t.title,
+            url: t.url,
+            text: isNative ? await readPageText(t.id) : undefined,
+          })),
+        ),
+      ),
+    [assistant, assistantService, sharedTabs],
   );
 
   // ---- keyboard shortcuts ----
@@ -321,6 +338,8 @@ function useBrowserState() {
     toggleShare,
     ask,
     assistant,
+    assistantService,
+    aiConnected,
     vpn,
     automation,
     downloads,

@@ -28,6 +28,7 @@ export interface WebviewEl extends HTMLElement {
   findInPage(text: string, opts?: { forward?: boolean; findNext?: boolean }): number;
   stopFindInPage(action: 'clearSelection' | 'keepSelection' | 'activateSelection'): void;
   openDevTools(): void;
+  executeJavaScript(code: string): Promise<unknown>;
 }
 
 /** Live <webview> per tab id, so toolbar actions can reach the page. */
@@ -40,4 +41,18 @@ export function withWebview(id: number, fn: (wv: WebviewEl) => void): boolean {
   if (!wv || !readyWebviews.has(id)) return false;
   fn(wv);
   return true;
+}
+
+export const MAX_PAGE_TEXT = 20_000;
+
+/** Visible text of a tab's page, or '' if the page isn't loaded. */
+export async function readPageText(id: number): Promise<string> {
+  const wv = webviews.get(id);
+  if (!wv || !readyWebviews.has(id)) return '';
+  try {
+    const text = await wv.executeJavaScript('document.body ? document.body.innerText : ""');
+    return typeof text === 'string' ? text.replace(/\n{3,}/g, '\n\n').trim().slice(0, MAX_PAGE_TEXT) : '';
+  } catch {
+    return '';
+  }
 }

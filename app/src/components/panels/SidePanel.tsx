@@ -61,9 +61,11 @@ export function SidePanel() {
           ×
         </button>
       </div>
-      {isNative && (
+      {isNative && !(b.panel === 'ai' && b.aiConnected) && (
         <div className="demo-notice" role="note">
-          Preview: this panel shows sample data. It isn't connected to a real service yet.
+          {b.panel === 'ai'
+            ? 'The assistant isn\'t connected yet. Add your assistant server in Settings → AI & automation.'
+            : 'Preview: this panel shows sample data. It isn\'t connected to a real service yet.'}
         </div>
       )}
       {b.panel === 'ai' && <AssistantPanel />}

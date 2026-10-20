@@ -1,4 +1,14 @@
-First desktop preview of Zenvora.
+Zenvora 0.2 connects the Assistant to real AI.
+
+## New in 0.2
+
+- **AI Assistant, for real.** Ask about the pages you share and get answers from **Claude** (Anthropic) or any model on **OpenRouter**. Follow-up questions keep the conversation.
+- **Your keys stay on your server.** The new Zenvora Assistant server (`server/` in the repository) holds the API keys; the app only stores the server address and an access token.
+- **Settings → AI & automation:** server address, access token, *Test connection*, provider choice (Claude or OpenRouter) and model.
+- Without a server, the desktop app says the Assistant isn't connected instead of showing invented answers.
+- The installed app now keeps its data in a folder named `Zenvora`.
+
+Setup guide: see **AI assistant setup** in the README.
 
 ## Downloads
 
@@ -12,21 +22,9 @@ First desktop preview of Zenvora.
 
 `SHA256SUMS.txt` lists checksums for every file.
 
-## What works
+## Still preview (sample data)
 
-- Real web browsing in tabs, with workspaces, back/forward, reopen closed tab and tab search
-- Address bar that tells URLs from searches (DuckDuckGo, Google, Bing or Brave)
-- Find in page, per-tab zoom, bookmarks star
-- Real error pages for unreachable sites and certificate problems
-- Light/dark/system theme, accent colors, horizontal or vertical tabs
-- Keyboard shortcuts: ⌘/Ctrl + T, W, ⇧T, L, K, F, R, comma
-- Sandboxed pages: no page gets camera, microphone or location access
-
-## Preview only (sample data, not connected yet)
-
-Assistant, Tasks, Privacy details, Page analysis (SEO) and the Downloads panel show sample data.
-The VPN is **not** available: it shows "Not set up" and never claims to protect your traffic.
-Files you download from websites are still saved normally.
+Tasks, Privacy details, Page analysis (SEO) and the Downloads panel show sample data. The VPN is **not** available: it shows "Not set up" and never claims to protect your traffic.
 
 ## Installing an unsigned build
 

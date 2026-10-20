@@ -469,3 +469,24 @@
   opacity: 0.55;
   color: inherit;
 }
+
+.setting-input {
+  width: 260px;
+  max-width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  box-sizing: border-box;
+  outline: none;
+}
+.setting-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.setting-action > span.c-ok { color: var(--ok); }
+.setting-action > span.c-warn { color: var(--warn); }
+.setting-action > span.c-danger { color: var(--danger); }

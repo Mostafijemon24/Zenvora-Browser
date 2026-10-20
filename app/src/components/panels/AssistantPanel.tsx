@@ -48,7 +48,7 @@ export function AssistantPanel() {
       </div>
       <div className="ai-chat" ref={log} aria-live="polite">
         {chat.map((m, i) => (
-          <div key={i} className={m.role === 'user' ? 'msg user' : 'msg'}>
+          <div key={i} className={m.role === 'user' ? 'msg user' : m.error ? 'msg error' : 'msg'}>
             {m.text}
           </div>
         ))}
@@ -79,8 +79,12 @@ export function AssistantPanel() {
           </button>
         </div>
         <div className="note">
-          Provider: {b.services.assistant.providerLabel}. Only the shared pages' visible text is sent — never passwords,
-          cookies or form fields.
+          {b.aiConnected ? (
+            <>Provider: {b.assistantService.providerLabel}, through your assistant server. </>
+          ) : (
+            <>Not connected: add your assistant server in Settings → AI & automation. </>
+          )}
+          Only the shared pages' visible text is sent — never passwords, cookies or form fields.
         </div>
       </div>
     </div>

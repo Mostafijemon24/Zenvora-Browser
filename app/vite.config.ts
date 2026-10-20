@@ -14,7 +14,7 @@ const csp: Plugin = {
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data:",
       "font-src 'self' data:",
-      "connect-src 'self' http://localhost:11434",
+      "connect-src 'self' https: http://localhost:* http://127.0.0.1:*", // assistant server + local models
       "object-src 'none'",
       "base-uri 'none'",
     ].join('; ');

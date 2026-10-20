@@ -9,12 +9,20 @@ import type { PageType } from '../lib/url';
 export interface SharedPage {
   title: string;
   url: string;
+  /** Visible text of the page (desktop app). Never form values or cookies. */
+  text?: string;
+}
+
+/** Earlier turns of the conversation, oldest first. */
+export interface ChatTurn {
+  role: 'user' | 'assistant';
+  text: string;
 }
 
 export interface AssistantService {
   /** Shown under the chat input, e.g. "Claude (Anthropic)". */
   providerLabel: string;
-  ask(question: string, pages: SharedPage[], signal?: AbortSignal): Promise<string>;
+  ask(question: string, pages: SharedPage[], signal?: AbortSignal, history?: ChatTurn[]): Promise<string>;
 }
 
 // ---- VPN -------------------------------------------------------------------

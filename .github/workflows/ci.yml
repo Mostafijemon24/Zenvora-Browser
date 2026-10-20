@@ -1,4 +1,4 @@
-# Typecheck, unit tests and production build on every push and pull request.
+# App: typecheck, unit tests, production build. Server: tests. On every push and pull request.
 name: CI
 
 on:
@@ -22,3 +22,18 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+
+  server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm ci
+      - run: npm test

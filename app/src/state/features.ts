@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type {
   AssistantService,
+  ChatTurn,
   AutomationService,
   DownloadsService,
   SharedPage,
@@ -183,35 +184,44 @@ export type Automation = ReturnType<typeof useAutomation>;
 export interface ChatMessage {
   role: 'ai' | 'user';
   text: string;
+  /** Error notes are shown but not sent back as conversation history. */
+  error?: boolean;
 }
 
-export function useAssistant(svc: AssistantService) {
+export function useAssistant() {
   const [chat, setChat] = useState<ChatMessage[]>([
     { role: 'ai', text: 'Hi — I can summarize, compare or explain the pages you share with me. Pick pages above, or ask a question.' },
   ]);
   const [thinking, setThinking] = useState(false);
   const busy = useRef(false);
 
-  const send = useCallback(
-    async (text: string, pages: SharedPage[]) => {
-      const q = (text || '').trim();
-      if (!q || busy.current) return false;
-      busy.current = true;
-      setChat((c) => c.concat({ role: 'user', text: q }));
-      setThinking(true);
-      try {
-        const reply = await svc.ask(q, pages);
-        setChat((c) => c.concat({ role: 'ai', text: reply }));
-      } catch {
-        setChat((c) => c.concat({ role: 'ai', text: "Sorry — the assistant couldn't answer. Check your connection and try again." }));
-      } finally {
-        busy.current = false;
-        setThinking(false);
-      }
-      return true;
-    },
-    [svc],
-  );
+  const chatRef = useRef(chat);
+  chatRef.current = chat;
+
+  /** `getPages` runs after the question is shown, so reading page text doesn't delay the UI. */
+  const send = useCallback(async (text: string, svc: AssistantService, getPages: () => Promise<SharedPage[]>) => {
+    const q = (text || '').trim();
+    if (!q || busy.current) return false;
+    busy.current = true;
+    // Earlier turns, without the canned greeting and error notes.
+    const history: ChatTurn[] = chatRef.current
+      .slice(1)
+      .filter((m) => !m.error)
+      .map((m) => ({ role: m.role === 'user' ? 'user' : 'assistant', text: m.text }));
+    setChat((c) => c.concat({ role: 'user', text: q }));
+    setThinking(true);
+    try {
+      const reply = await svc.ask(q, await getPages(), undefined, history);
+      setChat((c) => c.concat({ role: 'ai', text: reply || '(The assistant returned an empty answer.)' }));
+    } catch (e) {
+      const msg = e instanceof Error && e.message ? e.message : "The assistant couldn't answer. Check your connection and try again.";
+      setChat((c) => c.concat({ role: 'ai', text: msg, error: true }));
+    } finally {
+      busy.current = false;
+      setThinking(false);
+    }
+    return true;
+  }, []);
 
   return { chat, thinking, send };
 }
